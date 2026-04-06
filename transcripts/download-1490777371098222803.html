@@ -1,0 +1,99 @@
+
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+      <meta charset="UTF-8" />
+      <title>Téléchargement du transcript</title>
+      <style>
+        body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background: #f9f9f9;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+          color: #333;
+          text-align: center;
+          padding: 20px;
+        }
+        h1 {
+          color: #2c3e50;
+          margin-bottom: 1rem;
+        }
+        p {
+          font-size: 1.1rem;
+          margin-bottom: 2rem;
+        }
+        button {
+          background-color: #3498db;
+          border: none;
+          color: white;
+          padding: 12px 25px;
+          font-size: 1rem;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+          box-shadow: 0 4px 6px rgba(52, 152, 219, 0.4);
+        }
+        button:hover {
+          background-color: #2980b9;
+        }
+        .hidden {
+          display: none;
+        }
+        .error {
+          color: #e74c3c;
+          margin-top: 1rem;
+        }
+      </style>
+    </head>
+    <body>
+
+      <h1>Téléchargement du transcript</h1>
+      <p>Le téléchargement va démarrer automatiquement. Sinon, cliquez sur le bouton ci-dessous :</p>
+      <button id="downloadBtn">Télécharger le transcript</button>
+      <p id="errorMsg" class="error hidden">Erreur lors du téléchargement. Veuillez réessayer.</p>
+
+      <script>
+        const fileUrl = "https://malvarp.github.io/transcripts-tickets/transcripts/transcript-1490777371098222803.html?ts=" + new Date().getTime();
+        const fileName = "transcript-1490777371098222803.html";
+
+        const downloadBtn = document.getElementById('downloadBtn');
+        const errorMsg = document.getElementById('errorMsg');
+
+        function triggerDownload() {
+          fetch(fileUrl)
+            .then(resp => {
+              if (!resp.ok) throw new Error('Erreur réseau');
+              return resp.blob();
+            })
+            .then(blob => {
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.style.display = 'none';
+              a.href = url;
+              a.download = fileName;
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
+              a.remove();
+            })
+            .catch(() => {
+              errorMsg.classList.remove('hidden');
+            });
+        }
+
+        window.addEventListener('load', () => {
+          triggerDownload();
+        });
+
+        downloadBtn.addEventListener('click', () => {
+          errorMsg.classList.add('hidden');
+          triggerDownload();
+        });
+      </script>
+    </body>
+    </html>
+    
